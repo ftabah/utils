@@ -1,12 +1,20 @@
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class GenericHelper {
 	
 	private final static String EMPTY = "" ;
 	private final static String LINE_BREAK = "\n" ;
 	
+	/**
+	 * @param originalValue
+	 * @param finalSize
+	 * @return the original value plus zeroes on the left considering the given final size
+	 */
 	public static String insertZeroesOnTheLeft ( String originalValue , int finalSize ) {
 		StringBuffer finalValue = new StringBuffer ( ) ;
 		if ( isEmptyOrNull ( originalValue ) ) {
@@ -24,21 +32,30 @@ public class GenericHelper {
 		}
 	}
 	
-	public static String removeZeroesOnTheLeft ( String entrada ) {
-		if ( entrada == null ) {
+	/**
+	 * @param value
+	 * @return value without any zero on the left
+	 */
+	public static String removeZeroesOnTheLeft ( String value ) {
+		if ( value == null ) {
 			return EMPTY ;
 		}
-		while ( entrada.length ( ) > 0 ) {
-			if ( entrada.charAt ( 0 ) == '0' ) {
-				entrada = entrada.substring ( 1 ) ;
+		while ( value.length ( ) > 0 ) {
+			if ( value.charAt ( 0 ) == '0' ) {
+				value = value.substring ( 1 ) ;
 			}
 			else {
 				break ;
 			}
 		}
-		return entrada ;
+		return value ;
 	}
 	
+	/**
+	 * @param e - the exception itself
+	 * @param optionalReference - parameter not required
+	 * @return String with the formatted message
+	 */
 	public static String getExceptionMessage ( Exception e , String... optionalReference ) {
 		String msg = EMPTY ;
 		if ( optionalReference != null && optionalReference.length == 1 ) {
@@ -51,6 +68,10 @@ public class GenericHelper {
 		return msg ;
 	}
 	
+	/**
+	 * @param object to verify
+	 * @return boolean
+	 */
 	static public boolean isEmptyOrNull ( Object obj ) {
 		if ( obj == null ) {
 			return true ;
@@ -67,6 +88,10 @@ public class GenericHelper {
 		}
 	}
 
+	/**
+	 * @param object to verify
+	 * @return boolean
+	 */
 	static public boolean isZeroEmptyOrNull ( Object obj ) {
 		if ( isEmptyOrNull ( obj ) ) {
 			return true ;
@@ -116,5 +141,24 @@ public class GenericHelper {
 			return false ;
 		}
 	}
+	
+	/**
+	 * @return Date formatted as required in Brazilian reports
+	 */
+	public static String getDateForBR() {
+        Calendar cal = Calendar.getInstance();
+        Locale alocale[] = SimpleDateFormat.getAvailableLocales();
+        int i = 0;
+        for(int j = alocale.length; i < j; i++) {
+            Locale l = alocale[i];
+            if("BR".equals(l.getCountry())) {
+                String dia = (new StringBuilder()).append(cal.get(5)).toString();
+                String mes = cal.getDisplayName(2, 2, l);
+                String ano = (new StringBuilder()).append(cal.get(1)).toString();
+                return (new StringBuilder(String.valueOf(dia))).append(" de ").append(mes).append(" de ").append(ano).toString();
+            }
+        }
+        return "";
+    }
 	
 }
