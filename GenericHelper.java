@@ -1,7 +1,11 @@
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -160,5 +164,33 @@ public class GenericHelper {
         }
         return "";
     }
+	
+	
+	/**
+	 * Orders a list using a String field called by reflection
+	 * @param list - The object that will be ordered, the class listed must have a method that returns a String type
+	 * @param getterMethod - The name of the method that obtains the String that will be used to order the list
+	 * @throws Exception - if the method does not exist or does not return a String
+	 */
+	@SuppressWarnings ( { "unchecked" , "rawtypes" } )
+	public static void orderStringList ( List list , String getterMethod ) throws Exception {
+		if ( list == null || list.size ( ) <= 1 ) {
+			return ;
+		}
+		final Method method = list.get ( 0 ).getClass ( ).getDeclaredMethod ( getterMethod ) ;
+		Collections.sort(list, new Comparator <Object>() {
+			public int compare(Object o1, Object o2) {
+				try {
+					String s1 = (String) method.invoke (o1);
+					String s2 = (String) method.invoke (o2) ;
+					return s1.compareTo(s2);
+				} 
+				catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					System.out.println(getExceptionMessage(e, "orderStringList"));
+					return 0 ;
+				}
+			}
+		});
+	}
 	
 }
