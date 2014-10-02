@@ -9,6 +9,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * GenericHelper is an utility class
+ * @author Fabio Tabah
+ */
 public class GenericHelper {
 	
 	private final static String EMPTY = "" ;
@@ -76,7 +80,7 @@ public class GenericHelper {
 	 * @param object to verify
 	 * @return boolean
 	 */
-	static public boolean isEmptyOrNull ( Object obj ) {
+	public static boolean isEmptyOrNull ( Object obj ) {
 		if ( obj == null ) {
 			return true ;
 		}
@@ -96,7 +100,7 @@ public class GenericHelper {
 	 * @param object to verify
 	 * @return boolean
 	 */
-	static public boolean isZeroEmptyOrNull ( Object obj ) {
+	public static boolean isZeroEmptyOrNull ( Object obj ) {
 		if ( isEmptyOrNull ( obj ) ) {
 			return true ;
 		}
@@ -167,14 +171,14 @@ public class GenericHelper {
 	
 	
 	/**
-	 * Orders a list using a String field called by reflection
+	 * Orders a list of a given Object using a String obtained by a method called using reflection
 	 * @param list - The object that will be ordered, the class listed must have a method that returns a String type
 	 * @param getterMethod - The name of the method that obtains the String that will be used to order the list
 	 * @throws Exception - if the method does not exist or does not return a String
 	 */
 	@SuppressWarnings ( { "unchecked" , "rawtypes" } )
-	public static void orderStringList ( List list , String getterMethod ) throws Exception {
-		if ( list == null || list.size ( ) <= 1 ) {
+	public static void orderListUsingString ( List list , String getterMethod ) throws Exception {
+		if ( list == null || list.size ( ) < 2 ) {
 			return ;
 		}
 		final Method method = list.get ( 0 ).getClass ( ).getDeclaredMethod ( getterMethod ) ;
