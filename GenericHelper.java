@@ -2,12 +2,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 
 /**
  * GenericHelper is an utility class
@@ -238,5 +244,44 @@ public class GenericHelper {
 			}
 		});
 	}
+	
+	/**
+	 * Executes a MySQL command
+	 * @param user (ex: root)
+	 * @param pwd (ex: abc123, please use more secure passwords)
+	 * @param server (ex: localhost or 127.0.0.1)
+	 * @param port (ex: 3306)
+	 * @param dbName (ex: databaseName)
+	 * @param procedureScript (ex: "SELECT SENHA, SALT FROM USUARIO WHERE LOGINNAME = ?" )
+	 * @param parameters (ex: ["param1", "param2]
+	 * @return ResultSet from procedure
+	 */
+	public static ResultSet executeMySQLcommand ( String user , String pwd , String server , String port , String dbName ,
+											  String procedureScript , String... parameters ) {
+		Connection con = null;
+		PreparedStatement ps = null;
+	    ResultSet rs = null;
+		Properties connectionProps = new Properties();
+		connectionProps.put("user", user);
+		connectionProps.put("password", pwd);
+		try {
+			con = DriverManager.getConnection(
+					 (new StringBuilder("jdbc:mysql://").append(server).append(":")
+							 							.append(port).append("/")
+							 							.append(dbName).toString()), 
+					 connectionProps ) ;
+			
+			ps = con.prepareStatement ( procedureScript );
+			for ( int i = 1 ; i <= parameters.length ; i++ ) {
+				ps.setString(i, parameters[i-1]);
+			}
+	        rs = ps.executeQuery();
+		} 
+		catch (SQLException e) {
+			return null;
+		}
+		return rs ;
+	}
+
 	
 }
