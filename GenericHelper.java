@@ -45,10 +45,10 @@ public class GenericHelper {
 	 * @return value without any zero on the left
 	 */
 	public static String removeZeroesOnTheLeft ( String value ) {
-		if ( value == null ) {
+		if ( null == value ) {
 			return EMPTY ;
 		}
-		while ( value.length ( ) > 0 ) {
+		while ( 0 < value.length ( ) ) {
 			if ( value.charAt ( 0 ) == '0' ) {
 				value = value.substring ( 1 ) ;
 			}
@@ -81,7 +81,7 @@ public class GenericHelper {
 	 * @return boolean
 	 */
 	public static boolean isEmptyOrNull ( Object obj ) {
-		if ( obj == null ) {
+		if ( null == obj ) {
 			return true ;
 		}
 		else if ( obj instanceof String && EMPTY.equals ( obj ) ) {
@@ -160,14 +160,56 @@ public class GenericHelper {
         for(int j = alocale.length; i < j; i++) {
             Locale l = alocale[i];
             if("BR".equals(l.getCountry())) {
-                String dia = (new StringBuilder()).append(cal.get(5)).toString();
-                String mes = cal.getDisplayName(2, 2, l);
-                String ano = (new StringBuilder()).append(cal.get(1)).toString();
-                return (new StringBuilder(String.valueOf(dia))).append(" de ").append(mes).append(" de ").append(ano).toString();
+                String day = (new StringBuilder()).append(cal.get(Calendar.DAY_OF_MONTH)).toString();
+                String month = cal.getDisplayName(2, 2, l);
+                String year = (new StringBuilder()).append(cal.get(Calendar.YEAR)).toString();
+                return (new StringBuilder(String.valueOf(day))).append(" de ").append(month).append(" de ").append(year).toString();
             }
         }
-        return "";
+        String day = (new StringBuilder()).append(cal.get(Calendar.DAY_OF_MONTH)).toString();
+		String month = "";
+		switch (cal.get(Calendar.MONTH)) {
+			case 0:
+				month = "Janeiro";
+				break;
+			case 1:
+				month = "Fevereiro";
+				break;
+			case 2:
+				month = "Março";
+				break;
+			case 3:
+				month = "Abril";
+				break;
+			case 4:
+				month = "Maio";
+				break;
+			case 5:
+				month = "Junho";
+				break;
+			case 6:
+				month = "Julho";
+				break;
+			case 7:
+				month = "Agosto";
+				break;
+			case 8:
+				month = "Setembro";
+				break;
+			case 9:
+				month = "Outubro";
+				break;
+			case 10:
+				month = "Novembro";
+				break;
+			default:
+				month = "Dezembro";
+				break;
+		}
+		String year = (new StringBuilder()).append(cal.get(Calendar.YEAR)).toString();
+		return (new StringBuilder(String.valueOf(day))).append(" de ").append(month).append(" de ").append(year).toString();
     }
+	
 	
 	
 	/**
@@ -178,7 +220,7 @@ public class GenericHelper {
 	 */
 	@SuppressWarnings ( { "unchecked" , "rawtypes" } )
 	public static void orderListUsingString ( List list , String getterMethod ) throws Exception {
-		if ( list == null || list.size ( ) < 2 ) {
+		if ( list == null || 2 > list.size ( ) ) {
 			return ;
 		}
 		final Method method = list.get ( 0 ).getClass ( ).getDeclaredMethod ( getterMethod ) ;
